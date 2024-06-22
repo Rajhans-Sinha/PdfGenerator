@@ -1,0 +1,43 @@
+<table>
+    <thead>
+      <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Address</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let user of users; let i = index">
+        <td *ngIf="editIndex !== i">{{ user.name }}</td>
+        <td *ngIf="editIndex === i"><input [(ngModel)]="user.name" /></td>
+        
+        <td *ngIf="editIndex !== i">{{ user.email }}</td>
+        <td *ngIf="editIndex === i"><input [(ngModel)]="user.email" /></td>
+        
+        <td *ngIf="editIndex !== i">{{ user.phone }}</td>
+        <td *ngIf="editIndex === i"><input [(ngModel)]="user.phone" /></td>
+        
+        <td *ngIf="editIndex !== i">{{ user.address }}</td>
+        <td *ngIf="editIndex === i"><input [(ngModel)]="user.address" /></td>
+        
+        <td>
+          <button *ngIf="editIndex !== i" (click)="editUser(i)">Edit</button>
+          <button *ngIf="editIndex === i" (click)="saveUser(user)">Save</button>
+          <button *ngIf="editIndex === i" (click)="cancelEdit()">Cancel</button>
+          <button (click)="deleteUser(i)">Delete</button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+  <div>
+    <button class="action-button" [disabled]="users.length === 0"  (click)="generatePdf(users)">Generate PDF</button>
+    <button class="action-button" [disabled]="users.length === 0"  (click)="downloadPdf()">Download PDF</button>
+    <button class="action-button" [disabled]="users.length === 0"  (click)="viewPdf(users)">View PDF</button>
+  </div>
+  
+  <div *ngIf="pdfSrc" style="margin-top: 20px;">
+    <pdf-viewer [src]="pdfSrc" [render-text]="true" style="display: block;"></pdf-viewer>
+  </div>
+  

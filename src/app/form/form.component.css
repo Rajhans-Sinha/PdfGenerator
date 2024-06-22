@@ -1,0 +1,45 @@
+form {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 1em;
+    background: #f9f9f9;
+    border-radius: 5px;
+  }
+  
+  div {
+    margin-bottom: 1em;
+  }
+  
+  label {
+    margin-bottom: .5em;
+    color: #333333;
+    display: block;
+  }
+  
+  input, textarea {
+    border: 1px solid #CCCCCC;
+    padding: .5em;
+    font-size: 1em;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  button {
+    padding: 0.7em;
+    color: #fff;
+    background-color: #007BFF;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+  }
+  
+  button:disabled {
+    background-color: #CCCCCC;
+    cursor: not-allowed;
+  }
+  
+  div div {
+    color: red;
+    font-size: 0.8em;
+  }
+  

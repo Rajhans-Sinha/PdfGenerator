@@ -1,0 +1,57 @@
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 20px 0;
+    font-size: 1em;
+    text-align: left;
+  }
+  
+  thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+    font-weight: bold;
+  }
+  
+  th, td {
+    padding: 12px 15px;
+  }
+  
+  tbody tr {
+    border-bottom: 1px solid #dddddd;
+  }
+  
+  tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+  }
+  
+  tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+  }
+  
+  button {
+    padding: 5px 10px;
+    margin-right: 5px;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+  }
+  
+  button:hover {
+    opacity: 0.8;
+  }
+  
+  button:first-of-type {
+    background-color: #4CAF50;
+    color: white;
+  }
+  
+  button:last-of-type {
+    background-color: #f44336;
+    color: white;
+  }
+  .action-button:disabled {
+    background-color: #dddddd;
+    color: #888888;
+    cursor: not-allowed;
+  }
