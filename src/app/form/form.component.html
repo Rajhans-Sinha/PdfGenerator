@@ -33,6 +33,6 @@
       </div>
     </div>
   
-    <button type="submit" [disabled]="form.invalid">Submit</button>
+    <button class="action-button" [disabled]="!this.form.valid" type="submit" [disabled]="form.invalid">Submit</button>
   </form>
   

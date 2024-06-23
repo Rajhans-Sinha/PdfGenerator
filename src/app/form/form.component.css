@@ -42,4 +42,9 @@ form {
     color: red;
     font-size: 0.8em;
   }
+  .action-button:disabled {
+    background-color: #dddddd;
+    color: #888888;
+    cursor: not-allowed;
+  }
   
