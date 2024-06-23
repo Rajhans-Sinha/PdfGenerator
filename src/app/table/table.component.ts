@@ -1,9 +1,11 @@
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { User } from '../shared/user.model';
 import jsPDF from 'jspdf';
 import 'jspdf-autotable';
 import { ToastrService } from 'ngx-toastr';
+import { UserService } from '../user.service';
+import { Subscription } from 'rxjs';
 
 
 @Component({
@@ -11,21 +13,51 @@ import { ToastrService } from 'ngx-toastr';
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.css']
 })
-export class TableComponent {
+export class TableComponent implements OnInit {
   @Input() users: User[] = [];
   editIndex: number | null = null;
   editedUser: User | null = null;
   pdfSrc: string | undefined;
+  formDataSubscription: Subscription = new Subscription;
 
   editForm: FormGroup;
 
-  constructor(private fb: FormBuilder,private toastr:ToastrService) {
+  constructor(
+    private fb: FormBuilder,
+    private userService: UserService,
+    private toastr: ToastrService
+  ) {
     this.editForm = this.fb.group({
       name: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       phone: ['', [Validators.required, Validators.pattern(/^[0-9]{10}$/)]],
       address: ['', Validators.required]
     });
+  }
+
+  ngOnInit(): void {
+    const formDataSub = this.userService.formData.subscribe(
+      ()=>{
+        this.fetchUsers();
+      }
+    );
+    this.formDataSubscription.add(formDataSub);
+    this.fetchUsers();
+  }
+  ngOnDestroy() {
+    if (this.formDataSubscription) {
+      this.formDataSubscription.unsubscribe();
+    }
+  }
+  fetchUsers() {
+    this.userService.getUsers().subscribe({
+      next:(users: User[]) => {
+        this.users = users;
+      },
+      error:(error: any) => {
+        console.error('Error fetching users:', error);
+      }
+  });
   }
 
   editUser(index: number) {
@@ -43,17 +75,24 @@ export class TableComponent {
     });
   }
 
-
-  
-  saveUser(user:User) {
+  saveUser(user: User) {
     if (this.editForm.valid && this.editIndex !== null && this.editedUser) {
       this.editedUser.name = user.name;
       this.editedUser.email = user.email;
       this.editedUser.phone = user.phone;
       this.editedUser.address = user.address;
       this.users[this.editIndex] = { ...this.editedUser };
-      this.cancelEdit();
+      this.userService.updateUser(this.editedUser).subscribe({
+        next:(response: any) => {
+          console.log('User updated successfully:', response);
+          this.toastr.success('User updated successfully!');
+        },
+        error:(error: any) => {
+          console.error('Error updating user:', error);
+        }
+    });
     }
+    this.cancelEdit();
   }
 
   cancelEdit() {
@@ -63,7 +102,17 @@ export class TableComponent {
   }
 
   deleteUser(index: number) {
+    const deletedUser = this.users[index];
     this.users.splice(index, 1);
+    this.userService.deleteUser(deletedUser['id']).subscribe({
+      next:() => {
+        console.log('User deleted successfully');
+        this.toastr.success('User deleted successfully!');
+      },
+      error:(error: any) => {
+        console.error('Error deleting user:', error);
+      }
+  });
   }
 
   generatePdf(users: User[]): jsPDF {
@@ -89,7 +138,7 @@ export class TableComponent {
     doc.save('data.pdf');
   }
 
-  viewPdf(users: any) {
+  viewPdf(users: User[]) {
     const doc = this.generatePdf(users);
     doc.output('dataurlnewwindow');
   }

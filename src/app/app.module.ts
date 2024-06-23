@@ -9,6 +9,8 @@ import { TableComponent } from './table/table.component';
 import { ParentComponent } from './parent/parent.component';
 import { PdfViewerModule } from 'ng2-pdf-viewer';
 import { ToastrModule } from 'ngx-toastr';
+import { HTTP_INTERCEPTORS, HttpClientModule } from '@angular/common/http';
+import {HTTPInterceptor} from '/Project/PDFGeneratorProject/src/app/HTTPInterceptor'
 
 @NgModule({
   declarations: [
@@ -24,8 +26,13 @@ import { ToastrModule } from 'ngx-toastr';
     FormsModule,
     PdfViewerModule,
     ToastrModule.forRoot(), 
+    HttpClientModule
   ],
-  providers: [],
+  providers: [{
+    provide: HTTP_INTERCEPTORS,
+    useClass: HTTPInterceptor,
+    multi: true
+  }],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
